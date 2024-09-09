@@ -1,4 +1,4 @@
-# <img src=./SimpleTools/Resources/Icons/Windows-Icon.png width=25> SimpleTools
+# <img src=./SimpleTools/Assets/SVG/App-Icon.svg width=25> SimpleTools
 
 [![Build](https://github.com/qjingjie/SimpleTools/actions/workflows/cd.yml/badge.svg)](https://github.com/qjingjie/SimpleTools/actions/workflows/cd.yml)
 
