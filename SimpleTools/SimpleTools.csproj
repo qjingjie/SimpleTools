@@ -1,92 +1,94 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <OutputType>WinExe</OutputType>
-    <TargetFramework>net8.0-windows</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <UseWPF>true</UseWPF>
-    <ApplicationIcon>Assets\app-icon.ico</ApplicationIcon>
-    <Version>$(VersionPrefix)</Version>
-    <Copyright>Copyright @ 2024</Copyright>
-  </PropertyGroup>
+	<PropertyGroup>
+		<OutputType>WinExe</OutputType>
+		<TargetFramework>net8.0-windows</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<UseWPF>true</UseWPF>
+		<ApplicationIcon>Assets\app-icon.ico</ApplicationIcon>
+		<Copyright>Copyright @ 2024</Copyright>
+		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
+		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
+		<SelfContained>true</SelfContained>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Assets\app-icon.ico" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Black.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-BlackItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Bold.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-BoldItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-ExtraBold.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-ExtraBoldItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-ExtraLight.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-ExtraLightItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Italic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Light.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-LightItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Medium.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-MediumItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Regular.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-SemiBold.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-SemiBoldItalic.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-Thin.ttf" />
-    <None Remove="Assets\Fonts\Prompt\Prompt-ThinItalic.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-Bold.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-BoldItalic.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-Italic.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-Light.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-LightItalic.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-Medium.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-MediumItalic.ttf" />
-    <None Remove="Assets\Fonts\Ubuntu\Ubuntu-Regular.ttf" />
-    <None Remove="Assets\SVG\App-Icon.svg" />
-    <None Remove="Assets\SVG\ZeroMQ-Publisher-Icon.svg" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Remove="Assets\app-icon.ico" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Black.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-BlackItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Bold.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-BoldItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-ExtraBold.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-ExtraBoldItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-ExtraLight.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-ExtraLightItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Italic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Light.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-LightItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Medium.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-MediumItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Regular.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-SemiBold.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-SemiBoldItalic.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-Thin.ttf" />
+		<None Remove="Assets\Fonts\Prompt\Prompt-ThinItalic.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-Bold.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-BoldItalic.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-Italic.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-Light.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-LightItalic.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-Medium.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-MediumItalic.ttf" />
+		<None Remove="Assets\Fonts\Ubuntu\Ubuntu-Regular.ttf" />
+		<None Remove="Assets\SVG\App-Icon.svg" />
+		<None Remove="Assets\SVG\ZeroMQ-Publisher-Icon.svg" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Content Include="Assets\app-icon.ico" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Include="Assets\app-icon.ico" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-    <PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
-    <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
-    <PackageReference Include="NetMQ" Version="4.0.1.13" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="SharpVectors" Version="1.8.4.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
+		<PackageReference Include="MaterialDesignThemes" Version="4.9.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="8.0.1" />
+		<PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.122" />
+		<PackageReference Include="NetMQ" Version="4.0.1.13" />
+		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="SharpVectors" Version="1.8.4.2" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <Resource Include="Assets\app-icon.ico" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Black.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-BlackItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Bold.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-BoldItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-ExtraBold.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-ExtraBoldItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-ExtraLight.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-ExtraLightItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Italic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Light.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-LightItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Medium.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-MediumItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Regular.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-SemiBold.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-SemiBoldItalic.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-Thin.ttf" />
-    <Resource Include="Assets\Fonts\Prompt\Prompt-ThinItalic.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Bold.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-BoldItalic.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Italic.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Light.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-LightItalic.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Medium.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-MediumItalic.ttf" />
-    <Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Regular.ttf" />
-    <Resource Include="Assets\SVG\App-Icon.svg" />
-    <Resource Include="Assets\SVG\ZeroMQ-Publisher-Icon.svg" />
-  </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Assets\app-icon.ico" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Black.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-BlackItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Bold.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-BoldItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-ExtraBold.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-ExtraBoldItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-ExtraLight.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-ExtraLightItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Italic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Light.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-LightItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Medium.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-MediumItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Regular.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-SemiBold.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-SemiBoldItalic.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-Thin.ttf" />
+		<Resource Include="Assets\Fonts\Prompt\Prompt-ThinItalic.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Bold.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-BoldItalic.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Italic.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Light.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-LightItalic.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Medium.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-MediumItalic.ttf" />
+		<Resource Include="Assets\Fonts\Ubuntu\Ubuntu-Regular.ttf" />
+		<Resource Include="Assets\SVG\App-Icon.svg" />
+		<Resource Include="Assets\SVG\ZeroMQ-Publisher-Icon.svg" />
+	</ItemGroup>
 
 </Project>
