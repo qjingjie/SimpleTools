@@ -8,7 +8,6 @@ using SimpleTools.ViewModels.ObservableObjects;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
-using System.Timers;
 
 namespace SimpleTools.ViewModels
 {
@@ -19,7 +18,7 @@ namespace SimpleTools.ViewModels
         private readonly ZeroMQPublisher _publisher;
         private readonly IValidation<MessageConversionType> _messageConversionService;
 
-        private System.Timers.Timer _repeatTimer;
+        private HighResolutionTimer _repeatTimer;
 
         #endregion Fields
 
@@ -124,11 +123,11 @@ namespace SimpleTools.ViewModels
         [RelayCommand]
         private void ContinuousPublish()
         {
-            _repeatTimer = new System.Timers.Timer
+            _repeatTimer = new HighResolutionTimer
             {
-                Interval = RepeatIntevalMs
+                IntervalMs = RepeatIntevalMs
             };
-            _repeatTimer.Elapsed += (object sender, ElapsedEventArgs e) => _publisher.SendMessage(MessagePreview, Topic);
+            _repeatTimer.Elapsed += () => _publisher.SendMessage(MessagePreview, Topic);
             _repeatTimer.Start();
 
             IsPublishRepeatEnabled = false;
@@ -139,7 +138,7 @@ namespace SimpleTools.ViewModels
         {
             if (_repeatTimer != null)
             {
-                _repeatTimer.Elapsed -= (object sender, ElapsedEventArgs e) => _publisher.SendMessage(MessagePreview, Topic);
+                _repeatTimer.Elapsed -= () => _publisher.SendMessage(MessagePreview, Topic);
                 _repeatTimer.Stop();
             }
             IsPublishRepeatEnabled = true;
@@ -150,9 +149,8 @@ namespace SimpleTools.ViewModels
         {
             if (_repeatTimer != null)
             {
-                _repeatTimer.Elapsed -= (object sender, ElapsedEventArgs e) => _publisher.SendMessage(MessagePreview, Topic);
+                _repeatTimer.Elapsed -= () => _publisher.SendMessage(MessagePreview, Topic);
                 _repeatTimer.Stop();
-                _repeatTimer.Dispose();
             }
             _publisher.ClosePublisher();
         }

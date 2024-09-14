@@ -10,6 +10,7 @@
 		<RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
 		<IncludeAllContentForSelfExtract>true</IncludeAllContentForSelfExtract>
 		<SelfContained>true</SelfContained>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 
 	<ItemGroup>
