@@ -1,0 +1,215 @@
+﻿<Window x:Class="ZeroMQBroker.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:ZeroMQBroker" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:svgc="http://sharpvectors.codeplex.com/svgc/" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:validators="clr-namespace:Utils.ValidationRules;assembly=Utils" xmlns:enums="clr-namespace:Utils.Enums;assembly=Utils" mc:Ignorable="d" Title="ZeroMQ Broker" FontFamily="{StaticResource Ubuntu}" ResizeMode="CanMinimize" SizeToContent="WidthAndHeight" MinWidth="300" MinHeight="250" Style="{StaticResource CustomWindowCanMinimize}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding WindowClosingCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="20 0 20 20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="5" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!--Title-->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <svgc:SvgViewbox Source="pack://application:,,,/Resources;component/Assets/SVG/ZeroMQ-Icon.svg" Height="45" />
+
+            <StackPanel Margin="10">
+                <TextBlock FontSize="{StaticResource Title}" FontWeight="Bold" VerticalAlignment="Center">
+                    <Run Text="ZeroMQ" Foreground="{StaticResource Neutral-50}" />
+                    <Run Text="Broker" Foreground="{StaticResource Primary-700}" />
+                </TextBlock>
+
+                <TextBlock Text="Monitor Connections &amp; Relay Messages" Foreground="{StaticResource Neutral-50}" FontWeight="Bold" FontSize="{StaticResource Body1}" Margin="0 3 0 0" />
+            </StackPanel>
+        </StackPanel>
+
+        <!--Broker Settings-->
+        <materialDesign:Card Grid.Row="2" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Stretch">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="120" />
+                    <ColumnDefinition Width="5" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="20" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <materialDesign:PackIcon Kind="Settings" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                    <TextBlock Text="Broker Settings" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0" />
+                </StackPanel>
+
+                <!--Initialisation State-->
+                <materialDesign:PackIcon Grid.Column="0" Grid.ColumnSpan="8" Grid.Row="0" Kind="Circle" Height="30" Width="30" VerticalAlignment="Center" HorizontalAlignment="Right">
+                    <materialDesign:PackIcon.Style>
+                        <Style TargetType="materialDesign:PackIcon">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Unknown}">
+                                    <Setter Property="Foreground" Value="{StaticResource Unknown-700}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Danger}">
+                                    <Setter Property="Foreground" Value="{StaticResource Danger-700}" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Success}">
+                                    <Setter Property="Foreground" Value="{StaticResource Success-800}" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </materialDesign:PackIcon.Style>
+                </materialDesign:PackIcon>
+
+                <!--Publish Port-->
+                <TextBlock Grid.Column="0" Grid.Row="2" Text="Publish Port" Foreground="{StaticResource Neutral-400}" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Body1}" Margin="5 0 0 0" />
+                <TextBox Grid.Column="0" Grid.Row="3" x:Name="PublishPort" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" FontSize="{StaticResource Heading2}" MaxLength="5" materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource DefaultTextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Unknown}">
+                                    <Setter Property="IsReadOnly" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Danger}">
+                                    <Setter Property="IsReadOnly" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Success}">
+                                    <Setter Property="IsReadOnly" Value="True" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+
+                    <TextBox.Text>
+                        <Binding Path="PublishPort" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validators:PortRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <!--Subscribe Port-->
+                <TextBlock Grid.Column="2" Grid.Row="2" Text="Subscribe Port" Foreground="{StaticResource Neutral-400}" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Body1}" Margin="5 0 0 0" />
+                <TextBox Grid.Column="2" Grid.Row="3" x:Name="SubscribePort" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" FontSize="{StaticResource Heading2}" MaxLength="5" materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden">
+                    <TextBox.Style>
+                        <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource DefaultTextBox}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Unknown}">
+                                    <Setter Property="IsReadOnly" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Danger}">
+                                    <Setter Property="IsReadOnly" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Success}">
+                                    <Setter Property="IsReadOnly" Value="True" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </TextBox.Style>
+
+                    <TextBox.Text>
+                        <Binding Path="SubscribePort" UpdateSourceTrigger="PropertyChanged">
+                            <Binding.ValidationRules>
+                                <validators:PortRule ValidatesOnTargetUpdated="True" />
+                            </Binding.ValidationRules>
+                        </Binding>
+                    </TextBox.Text>
+                </TextBox>
+
+                <!--Init Button-->
+                <Button Grid.Column="4" Grid.Row="3" Content="Initialise" Command="{Binding InitBrokerCommand}" VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Unknown}">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Danger}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Success}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=PublishPort, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding ElementName=SubscribePort, Path=(Validation.HasError)}" Value="True">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!--Close Button-->
+                <Button Grid.Column="6" Grid.Row="3" Content="Close" Command="{Binding CloseBrokerCommand}" VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Unknown}">
+                                    <Setter Property="IsEnabled" Value="False" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Danger}">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </DataTrigger>
+                                <DataTrigger Binding="{Binding InitialisationState}" Value="{x:Static enums:State.Success}">
+                                    <Setter Property="IsEnabled" Value="True" />
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+            </Grid>
+        </materialDesign:Card>
+
+        <!--Monitoring-->
+        <materialDesign:Card Grid.Row="4" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Stretch">
+            <Grid Margin="10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="5" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="5" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--Number of connected publishers-->
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <materialDesign:PackIcon Kind="RayEndArrow" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                    <TextBlock Text="No. Connected Publishers" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 5 0" />
+                </StackPanel>
+
+                <Border Grid.Column="2" Grid.Row="0" Background="{StaticResource Neutral-900}" CornerRadius="5" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{Binding PublisherCount}" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+
+                <!--Number of connected subscribers-->
+                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                    <materialDesign:PackIcon Kind="RayStartArrow" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                    <TextBlock Text="No. Connected Subscribers" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 5 0" />
+                </StackPanel>
+
+                <Border Grid.Column="2" Grid.Row="2" Background="{StaticResource Neutral-900}" CornerRadius="5" HorizontalAlignment="Stretch">
+                    <TextBlock Text="{Binding SubscriberCount}" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" Margin="5" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                </Border>
+            </Grid>
+        </materialDesign:Card>
+    </Grid>
+</Window>

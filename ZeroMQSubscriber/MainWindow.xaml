@@ -1,0 +1,471 @@
+﻿<Window x:Class="ZeroMQSubscriber.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:svgc="http://sharpvectors.codeplex.com/svgc/" xmlns:validators="clr-namespace:Utils.ValidationRules;assembly=Utils" xmlns:enums="clr-namespace:ZeroMQSubscriber.Enums" mc:Ignorable="d" Title="ZeroMQ Subscriber" FontFamily="{StaticResource Ubuntu}" ResizeMode="CanResize" SizeToContent="WidthAndHeight" MinWidth="600" MinHeight="250" Style="{StaticResource CustomWindow}">
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="Closing">
+            <i:InvokeCommandAction Command="{Binding WindowClosingCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Grid Margin="20 0 20 20">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!--Title-->
+        <StackPanel Grid.Row="0" Orientation="Horizontal" HorizontalAlignment="Left">
+            <svgc:SvgViewbox Source="pack://application:,,,/Resources;component/Assets/SVG/ZeroMQ-Icon.svg" Height="45" />
+
+            <StackPanel Margin="10">
+                <TextBlock FontSize="{StaticResource Title}" FontWeight="Bold" VerticalAlignment="Center">
+                    <Run Text="ZeroMQ" Foreground="{StaticResource Neutral-50}" />
+                    <Run Text="Subscriber" Foreground="{StaticResource Primary-700}" />
+                </TextBlock>
+
+                <TextBlock Text="Subscribe, Monitor &amp; Log Custom Messages" Foreground="{StaticResource Neutral-50}" FontWeight="Bold" FontSize="{StaticResource Body1}" Margin="0 3 0 0" />
+            </StackPanel>
+        </StackPanel>
+
+        <ScrollViewer Grid.Row="2" Template="{StaticResource DefaultScrollViewer}" Margin="0 0 -15 0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition MinHeight="300" Height="*" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--Subscriber Settings-->
+                <materialDesign:Card Grid.Row="0" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left">
+                    <Grid Margin="10">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="5" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="20" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="Settings" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                            <TextBlock Text="Subscriber Settings" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0" />
+                        </StackPanel>
+
+                        <!--Connection State-->
+                        <Border Grid.Column="0" Grid.ColumnSpan="7" Grid.Row="0" Width="150" Background="{StaticResource Neutral-900}" CornerRadius="5" VerticalAlignment="Center" HorizontalAlignment="Right" Padding="0 5 0 5">
+                            <TextBlock Text="{Binding ConnectionState}" FontSize="{StaticResource Heading2}" VerticalAlignment="Center" HorizontalAlignment="Center">
+                                <TextBlock.Style>
+                                    <Style TargetType="{x:Type TextBlock}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                                <Setter Property="Foreground" Value="{StaticResource Neutral-400}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                                <Setter Property="Foreground" Value="{StaticResource Success-800}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                                <Setter Property="Foreground" Value="{StaticResource Success-800}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                                <Setter Property="Foreground" Value="{StaticResource Danger-700}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBlock.Style>
+                            </TextBlock>
+                        </Border>
+
+                        <!--IP Address-->
+                        <StackPanel Grid.Column="0" Grid.ColumnSpan="3" Grid.Row="2">
+                            <TextBlock Text="IP Address" Foreground="{StaticResource Neutral-400}" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Body1}" Margin="5 0 0 0" />
+
+                            <TextBox x:Name="IpAddressInput" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" FontSize="{StaticResource Heading2}" MaxLength="15" materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource DefaultTextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                                <Setter Property="IsReadOnly" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                                <Setter Property="IsReadOnly" Value="True" />
+                                                <Setter Property="Cursor" Value="Arrow" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Primary-700}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                                <Setter Property="IsReadOnly" Value="True" />
+                                                <Setter Property="Cursor" Value="Arrow" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Primary-700}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                                <Setter Property="IsReadOnly" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+
+                                <TextBox.Text>
+                                    <Binding Path="Ipv4" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <validators:Ipv4Rule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+
+                        <!--Port-->
+                        <StackPanel Grid.Column="4" Grid.ColumnSpan="3" Grid.Row="2">
+                            <TextBlock Text="Port" Foreground="{StaticResource Neutral-400}" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Body1}" Margin="5 0 0 0" />
+
+                            <TextBox x:Name="PortInput" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" FontSize="{StaticResource Heading2}" MaxLength="5" materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden">
+                                <TextBox.Style>
+                                    <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource DefaultTextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                                <Setter Property="IsReadOnly" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                                <Setter Property="IsReadOnly" Value="True" />
+                                                <Setter Property="Cursor" Value="Arrow" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Primary-700}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                                <Setter Property="IsReadOnly" Value="True" />
+                                                <Setter Property="Cursor" Value="Arrow" />
+                                                <Setter Property="BorderBrush" Value="{StaticResource Primary-700}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                                <Setter Property="IsReadOnly" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+
+                                <TextBox.Text>
+                                    <Binding Path="Port" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <validators:PortRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+
+                        <!--Connect Button-->
+                        <Button Grid.Column="0" Grid.Row="4" Content="Connect" Command="{Binding ConfigurePublisherCommand}" CommandParameter="{x:Static enums:ConnectionType.Connect}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=IpAddressInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=PortInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <!--Disconnect Button-->
+                        <Button Grid.Column="2" Grid.Row="4" Content="Disconnect" Command="{Binding ConfigurePublisherCommand}" CommandParameter="{x:Static enums:ConnectionType.Disconnect}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=IpAddressInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=PortInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <!--Bind Button-->
+                        <Button Grid.Column="4" Grid.Row="4" Content="Bind" Command="{Binding ConfigurePublisherCommand}" CommandParameter="{x:Static enums:ConnectionType.Bind}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=IpAddressInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=PortInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+
+                        <!--Unbind Button-->
+                        <Button Grid.Column="6" Grid.Row="4" Content="Unbind" Command="{Binding ConfigurePublisherCommand}" CommandParameter="{x:Static enums:ConnectionType.Unbind}">
+                            <Button.Style>
+                                <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Unconfigured}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Error}">
+                                            <Setter Property="IsEnabled" Value="True" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=IpAddressInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                        <DataTrigger Binding="{Binding ElementName=PortInput, Path=(Validation.HasError)}" Value="True">
+                                            <Setter Property="IsEnabled" Value="False" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+                </materialDesign:Card>
+
+                <!--Subscribe Topic-->
+                <materialDesign:Card Grid.Row="2" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left" Width="500">
+                    <StackPanel Margin="10">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="MessageArrowLeft" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                            <TextBlock Text="Subscribe Topic" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0" />
+                        </StackPanel>
+
+                        <TextBlock Text="Leave the field below empty to subscribe to all published topics" Foreground="{StaticResource Warning-600}" FontSize="{StaticResource Body2}" TextWrapping="WrapWithOverflow" Margin="0 5 0 0" />
+
+                        <!--Topic Input-->
+                        <StackPanel Margin="0 10 0 0">
+                            <TextBlock Text="Topic" Foreground="{StaticResource Neutral-400}" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Body1}" Margin="5 0 0 0" />
+                            <TextBox Style="{StaticResource DefaultTextBox}" Text="{Binding Topic}" FontSize="{StaticResource Heading2}" IsReadOnly="{Binding IsSubscribed}" />
+                        </StackPanel>
+
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <!--Subscribe Button-->
+                            <Button Command="{Binding SubscribeCommand}" HorizontalAlignment="Left" Margin="0 0 5 0" ToolTip="Subscribe to the topic." ToolTipService.InitialShowDelay="0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Subscribe" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <materialDesign:PackIcon Kind="CursorDefaultClick" Width="20" Height="20" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button.Content>
+
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!--Unsubscribe Button-->
+                            <Button Command="{Binding UnsubscribeCommand}" HorizontalAlignment="Left" ToolTip="Unsubscribe to the topic." ToolTipService.InitialShowDelay="0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Unsubscribe" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <materialDesign:PackIcon Kind="CursorDefaultClickOutline" Width="20" Height="20" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button.Content>
+
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="True" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="True" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </StackPanel>
+                </materialDesign:Card>
+
+                <!--Received Message-->
+                <materialDesign:Card Grid.Row="4" Background="{StaticResource Neutral-800}" UniformCornerRadius="10">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Text="Received Message" Grid.Row="0" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Heading2}" Foreground="{StaticResource Neutral-400}" VerticalAlignment="Center" Margin="5 0 0 5" />
+                        <Border Grid.Row="1" Background="{StaticResource Neutral-900}" Padding="5" CornerRadius="5">
+                            <TextBlock Text="{Binding ReceivedMessage}" Foreground="{StaticResource Neutral-50}" Background="{StaticResource Neutral-900}" FontSize="{StaticResource Body1}" TextWrapping="Wrap" />
+                        </Border>
+                    </Grid>
+                </materialDesign:Card>
+
+                <!--Logging-->
+                <materialDesign:Card Grid.Row="6" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left">
+                    <StackPanel Margin="10">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="FileDocumentEdit" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                            <TextBlock Text="Log Message" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0" />
+                        </StackPanel>
+
+                        <!--Log File Name-->
+                        <StackPanel Margin="0 10 0 0" Width="400" HorizontalAlignment="Left">
+                            <TextBlock Text="Filename (.txt)" Foreground="{StaticResource Neutral-400}" FontFamily="{StaticResource Prompt}" FontSize="{StaticResource Body1}" Margin="5 0 0 0" />
+                            <TextBox x:Name="LogFileNameInput" Style="{StaticResource DefaultTextBox}" Validation.ErrorTemplate="{StaticResource ValidationTemplate}" FontSize="{StaticResource Heading2}" materialDesign:TextFieldAssist.CharacterCounterVisibility="Hidden">
+                                <TextBox.Text>
+                                    <Binding Path="LogFileName" UpdateSourceTrigger="PropertyChanged">
+                                        <Binding.ValidationRules>
+                                            <validators:FilenameRule ValidatesOnTargetUpdated="True" />
+                                        </Binding.ValidationRules>
+                                    </Binding>
+                                </TextBox.Text>
+                            </TextBox>
+                        </StackPanel>
+
+                        <!--Log Buttons-->
+                        <StackPanel Orientation="Horizontal" Margin="0 10 0 0">
+                            <!--Start Button-->
+                            <Button Command="{Binding StartLoggingCommand}" HorizontalAlignment="Left" Margin="0 0 5 0" ToolTip="Start logging received messages." ToolTipService.InitialShowDelay="0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Start" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <materialDesign:PackIcon Kind="Play" Width="20" Height="20" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button.Content>
+
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsLogging}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=LogFileNameInput, Path=(Validation.HasError)}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!--Stop Button-->
+                            <Button Command="{Binding StopLoggingCommand}" HorizontalAlignment="Left" Margin="0 0 5 0" ToolTip="Stop logging received messages." ToolTipService.InitialShowDelay="0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Stop" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <materialDesign:PackIcon Kind="Stop" Width="20" Height="20" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button.Content>
+
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsLogging}" Value="False">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding ElementName=LogFileNameInput, Path=(Validation.HasError)}" Value="True">
+                                                <Setter Property="IsEnabled" Value="False" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+
+                        <TextBlock Foreground="{StaticResource Neutral-200}" FontSize="{StaticResource Body2}" TextWrapping="WrapWithOverflow" Margin="0 10 0 0">
+                            <Run Text="File saved to: " />
+                            <Run Text="{Binding LogFilePath}" />
+
+                            <TextBlock.Style>
+                                <Style TargetType="{x:Type TextBlock}">
+                                    <Setter Property="Visibility" Value="Hidden" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ShowLogFilePath}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </TextBlock.Style>
+                        </TextBlock>
+                    </StackPanel>
+                </materialDesign:Card>
+            </Grid>
+        </ScrollViewer>
+    </Grid>
+</Window>

@@ -1,0 +1,52 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.12.35527.113
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppSelector", "AppSelector\AppSelector.csproj", "{81742AC5-D93D-4AE7-8A81-613FA6F951FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utils", "Utils\Utils.csproj", "{61106019-38FA-4CDB-A752-B372224ACBA9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Resources", "Resources\Resources.csproj", "{3B46808C-9493-4260-B54F-8819B83428D7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroMQBroker", "ZeroMQBroker\ZeroMQBroker.csproj", "{6A3C7C17-4784-449A-B602-C26980328E73}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroMQPublisher", "ZeroMQPublisher\ZeroMQPublisher.csproj", "{35C89DA1-D06F-414C-AAFA-ABD90A8DD690}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ZeroMQSubscriber", "ZeroMQSubscriber\ZeroMQSubscriber.csproj", "{13079AED-94D0-4C72-AB7E-DBA58DBE3B96}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{81742AC5-D93D-4AE7-8A81-613FA6F951FC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81742AC5-D93D-4AE7-8A81-613FA6F951FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81742AC5-D93D-4AE7-8A81-613FA6F951FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81742AC5-D93D-4AE7-8A81-613FA6F951FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{61106019-38FA-4CDB-A752-B372224ACBA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{61106019-38FA-4CDB-A752-B372224ACBA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{61106019-38FA-4CDB-A752-B372224ACBA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{61106019-38FA-4CDB-A752-B372224ACBA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B46808C-9493-4260-B54F-8819B83428D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B46808C-9493-4260-B54F-8819B83428D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B46808C-9493-4260-B54F-8819B83428D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B46808C-9493-4260-B54F-8819B83428D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6A3C7C17-4784-449A-B602-C26980328E73}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6A3C7C17-4784-449A-B602-C26980328E73}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6A3C7C17-4784-449A-B602-C26980328E73}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6A3C7C17-4784-449A-B602-C26980328E73}.Release|Any CPU.Build.0 = Release|Any CPU
+		{35C89DA1-D06F-414C-AAFA-ABD90A8DD690}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35C89DA1-D06F-414C-AAFA-ABD90A8DD690}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35C89DA1-D06F-414C-AAFA-ABD90A8DD690}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35C89DA1-D06F-414C-AAFA-ABD90A8DD690}.Release|Any CPU.Build.0 = Release|Any CPU
+		{13079AED-94D0-4C72-AB7E-DBA58DBE3B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{13079AED-94D0-4C72-AB7E-DBA58DBE3B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{13079AED-94D0-4C72-AB7E-DBA58DBE3B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{13079AED-94D0-4C72-AB7E-DBA58DBE3B96}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

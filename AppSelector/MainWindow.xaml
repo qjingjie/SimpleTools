@@ -1,0 +1,70 @@
+﻿<Window x:Class="AppSelector.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:local="clr-namespace:AppSelector" xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes" xmlns:svgc="http://sharpvectors.codeplex.com/svgc/" xmlns:enums="clr-namespace:AppSelector.Enums" mc:Ignorable="d" Title="SimpleTools" FontFamily="{StaticResource Ubuntu}" ResizeMode="CanResize" SizeToContent="WidthAndHeight" MinWidth="300" MinHeight="250" Style="{StaticResource CustomWindow}">
+    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Margin="20 0 20 20">
+        <!--Title-->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <svgc:SvgViewbox Source="pack://application:,,,/Resources;component/Assets/SVG/App-Icon.svg" Height="45" />
+
+            <StackPanel Margin="10">
+                <TextBlock FontSize="{StaticResource Title}" FontWeight="Bold" VerticalAlignment="Center">
+                    <Run Text="Simple" Foreground="{StaticResource Neutral-50}" />
+                    <Run Text="Tools" Foreground="{StaticResource Primary-700}" />
+                </TextBlock>
+
+                <TextBlock Text="One App, Endless Utility" Foreground="{StaticResource Neutral-50}" FontWeight="Bold" FontSize="{StaticResource Body1}" Margin="0 3 0 0" />
+            </StackPanel>
+        </StackPanel>
+
+        <!--Application List-->
+        <materialDesign:Card Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left" Margin="0 10 0 0">
+            <Grid Margin="10" HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="10" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!--ZeroMQ Broker-->
+                <Button Grid.Column="0" Grid.Row="0" Width="80" Height="80" Style="{StaticResource MenuButton}" Command="{Binding LaunchAppCommand}" CommandParameter="{x:Static enums:AppName.ZmqBroker}" ToolTip="ZeroMQ Broker" ToolTipService.InitialShowDelay="0">
+                    <Button.Content>
+                        <StackPanel>
+                            <svgc:SvgViewbox Source="pack://application:,,,/Resources;component/Assets/SVG/ZeroMQ-Icon.svg" Height="35" />
+                            <Border Background="{StaticResource Primary-700}" Width="60" Height="20" Margin="10 10 10 0" CornerRadius="5">
+                                <TextBlock Text="BROKER" Foreground="{StaticResource Neutral-50}" FontWeight="Bold" FontSize="{StaticResource Body2}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Border>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+
+                <!--ZeroMQ Publisher-->
+                <Button Grid.Column="2" Grid.Row="0" Width="80" Height="80" Style="{StaticResource MenuButton}" Command="{Binding LaunchAppCommand}" CommandParameter="{x:Static enums:AppName.ZmqPublisher}" ToolTip="ZeroMQ Publisher" ToolTipService.InitialShowDelay="0">
+                    <Button.Content>
+                        <StackPanel>
+                            <svgc:SvgViewbox Source="pack://application:,,,/Resources;component/Assets/SVG/ZeroMQ-Icon.svg" Height="35" />
+                            <Border Background="{StaticResource Primary-700}" Width="60" Height="20" Margin="10 10 10 0" CornerRadius="5">
+                                <TextBlock Text="PUB" Foreground="{StaticResource Neutral-50}" FontWeight="Bold" FontSize="{StaticResource Body2}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Border>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+
+                <!--ZeroMQ Subscriber-->
+                <Button Grid.Column="4" Grid.Row="0" Width="80" Height="80" Style="{StaticResource MenuButton}" Command="{Binding LaunchAppCommand}" CommandParameter="{x:Static enums:AppName.ZmqSubscriber}" ToolTip="ZeroMQ Subscriber" ToolTipService.InitialShowDelay="0">
+                    <Button.Content>
+                        <StackPanel>
+                            <svgc:SvgViewbox Source="pack://application:,,,/Resources;component/Assets/SVG/ZeroMQ-Icon.svg" Height="35" />
+                            <Border Background="{StaticResource Primary-700}" Width="60" Height="20" Margin="10 10 10 0" CornerRadius="5">
+                                <TextBlock Text="SUB" Foreground="{StaticResource Neutral-50}" FontWeight="Bold" FontSize="{StaticResource Body2}" VerticalAlignment="Center" HorizontalAlignment="Center" />
+                            </Border>
+                        </StackPanel>
+                    </Button.Content>
+                </Button>
+            </Grid>
+        </materialDesign:Card>
+    </StackPanel>
+</Window>
