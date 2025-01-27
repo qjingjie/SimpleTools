@@ -86,7 +86,7 @@ namespace ZeroMQBroker.Models
                 try
                 {
                     _subscriber = new XSubscriberSocket();
-                    _subscriber.Bind($"tcp://localhost:{subscribePort}");
+                    _subscriber.Bind($"tcp://*:{subscribePort}");
                     _isSubscriberBound = true;
 
                     SubscriberMonitor = new(_subscriber, $"inproc://broker.sub.{randomEndpoint.Next(1, 65535)}", SocketEvents.All);

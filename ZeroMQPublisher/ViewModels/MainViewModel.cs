@@ -33,7 +33,7 @@ namespace ZeroMQPublisher.ViewModels
             MessageFormatOptions =
             [
                 new MessageFormatOption(MessageFormat.String, "Text Files (*.txt)|*.txt"),
-                new MessageFormatOption(MessageFormat.Json, "JSON Files (.json)|.json")
+                new MessageFormatOption(MessageFormat.Json, "JSON Files (*.json)|*.json")
             ];
 
             SelectedMessageFormatOption = MessageFormatOptions[0];

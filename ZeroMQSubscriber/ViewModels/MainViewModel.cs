@@ -90,6 +90,7 @@ namespace ZeroMQSubscriber.ViewModels
         [RelayCommand]
         private void Subscribe()
         {
+            ReceivedMessage = string.Empty;
             _subscriber.SubscribeTopic(Topic);
             IsSubscribed = true;
         }
