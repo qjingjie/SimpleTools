@@ -1,13 +1,9 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
+using Serilog;
+using System.Diagnostics;
 using System.IO;
-using System.Linq;
-using System.Printing.IndexedProperties;
 using System.Text;
-using System.Threading.Tasks;
-using Utils;
 using ZeroMQSubscriber.Enums;
 using ZeroMQSubscriber.Models;
 
@@ -20,6 +16,7 @@ namespace ZeroMQSubscriber.ViewModels
         private readonly Subscriber _subscriber;
 
         private string _folderPath;
+        private string _uriPath;
 
         #endregion Fields
 
@@ -29,13 +26,15 @@ namespace ZeroMQSubscriber.ViewModels
         {
             _subscriber = subscriber;
 
+            _folderPath = CreateDefaultDirectory();
+            _uriPath = string.Empty;
+
             Ipv4 = string.Empty;
             Port = string.Empty;
             Topic = string.Empty;
             ReceivedMessage = string.Empty;
             LogFileName = string.Empty;
-
-            CreateDefaultDirectory();
+            LogFilePath = string.Empty;
         }
 
         #endregion Constructor
@@ -106,7 +105,7 @@ namespace ZeroMQSubscriber.ViewModels
         private void StartLogging()
         {
             IsLogging = true;
-            LogFilePath = Path.Combine(_folderPath, $"{LogFileName}.txt");
+            ConfigureLogger();
             ShowLogFilePath = false;
         }
 
@@ -114,7 +113,22 @@ namespace ZeroMQSubscriber.ViewModels
         private void StopLogging()
         {
             IsLogging = false;
-            ShowLogFilePath = true;
+            Log.CloseAndFlush();
+
+            string latestLogFileName = GetLatestLogFileName();
+
+            if (latestLogFileName != null)
+            {
+                LogFilePath = Path.Combine(_folderPath, latestLogFileName);
+                _uriPath = new Uri(LogFilePath).AbsoluteUri;
+                ShowLogFilePath = true;
+            }
+        }
+
+        [RelayCommand]
+        private void OpenLogFile()
+        {
+            Process.Start("explorer.exe", _uriPath);
         }
 
         [RelayCommand]
@@ -129,6 +143,11 @@ namespace ZeroMQSubscriber.ViewModels
             {
                 await _subscriber.Configure(ConnectionType.Unbind, Ipv4, int.Parse(Port));
             }
+
+            if (IsLogging)
+            {
+                Log.CloseAndFlush();
+            }
         }
 
         #endregion Commands
@@ -138,7 +157,8 @@ namespace ZeroMQSubscriber.ViewModels
         /// <summary>
         /// Create a directory for storing log files in appdata.
         /// </summary>
-        private void CreateDefaultDirectory()
+        /// <returns>Created folder path.</returns>
+        private static string CreateDefaultDirectory()
         {
             string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
             string folderPath = Path.Combine(appDataPath, "SimpleTools", "ZeroMQ", "Logs");
@@ -148,7 +168,33 @@ namespace ZeroMQSubscriber.ViewModels
                 Directory.CreateDirectory(folderPath);
             }
 
-            _folderPath = folderPath;
+            return folderPath;
+        }
+
+        /// <summary>
+        /// Configure serilog logger.
+        /// </summary>
+        private void ConfigureLogger()
+        {
+            string fullPath = Path.Combine(_folderPath, LogFileName);
+            Log.Logger = new LoggerConfiguration().WriteTo
+                                                  .File($"{fullPath}_.txt", outputTemplate: "{Timestamp:yyyy-MM-dd HH:mm:ss.fff zzz} {Message:lj}{NewLine}", rollingInterval: RollingInterval.Hour)
+                                                  .CreateLogger();
+        }
+
+        /// <summary>
+        /// Retreive the name of the latest updated log file.
+        /// </summary>
+        /// <returns>Name of most recently updated log file.</returns>
+        private string GetLatestLogFileName()
+        {
+            string logPattern = $"{LogFileName}_*.txt";
+
+            string latestLogFile = Directory.GetFiles(_folderPath, logPattern)
+                                            .OrderByDescending(File.GetCreationTime)
+                                            .FirstOrDefault();
+
+            return latestLogFile;
         }
 
         /// <summary>
@@ -161,7 +207,7 @@ namespace ZeroMQSubscriber.ViewModels
 
             if (IsLogging)
             {
-                File.AppendAllText(LogFilePath, $"{ReceivedMessage}\n");
+                Log.Information(ReceivedMessage);
             }
         }
 

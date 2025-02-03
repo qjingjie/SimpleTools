@@ -1,8 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using System.Configuration;
-using System.Data;
 using System.Windows;
-using Utils.Interfaces;
 using ZeroMQSubscriber.Models;
 using ZeroMQSubscriber.ViewModels;
 
