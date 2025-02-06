@@ -13,6 +13,8 @@ namespace ZeroMQSubscriber.Models
         private Task _zmqRuntime;
         private CancellationTokenSource _cts;
 
+        private bool _scanForTopics;
+
         #endregion Fields
 
         #region Constructor
@@ -110,9 +112,11 @@ namespace ZeroMQSubscriber.Models
         /// Subscribe to a desired topic.
         /// </summary>
         /// <param name="topic"></param>
-        public void SubscribeTopic(string topic)
+        /// <param name="scanForTopics"></param>
+        public void SubscribeTopic(string topic, bool scanForTopics = false)
         {
             _subscriber.Subscribe(topic);
+            _scanForTopics = scanForTopics;
         }
 
         /// <summary>
@@ -122,6 +126,7 @@ namespace ZeroMQSubscriber.Models
         public void UnsubscribeTopic(string topic)
         {
             _subscriber.Unsubscribe(topic);
+            _scanForTopics = false;
         }
 
         /// <summary>
@@ -157,16 +162,26 @@ namespace ZeroMQSubscriber.Models
                 {
                     (messageA, moreFrames) = await _subscriber.ReceiveFrameStringAsync(ct);
 
-                    if (messageA != null)
+                    if (_scanForTopics)
                     {
-                        if (moreFrames)
-                        {
-                            (messageB, _) = await _subscriber.ReceiveFrameBytesAsync(ct);
-                            OnMessageReceiveEvent?.Invoke(messageB);
-                        }
-                        else
+                        if (messageA != null && moreFrames)
                         {
                             OnMessageReceiveEvent?.Invoke(Encoding.Default.GetBytes(messageA));
+                        }
+                    }
+                    else
+                    {
+                        if (messageA != null)
+                        {
+                            if (moreFrames)
+                            {
+                                (messageB, _) = await _subscriber.ReceiveFrameBytesAsync(ct);
+                                OnMessageReceiveEvent?.Invoke(messageB);
+                            }
+                            else
+                            {
+                                OnMessageReceiveEvent?.Invoke(Encoding.Default.GetBytes(messageA));
+                            }
                         }
                     }
                 }

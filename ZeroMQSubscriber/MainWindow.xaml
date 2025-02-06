@@ -33,6 +33,8 @@
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="10" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
                     <RowDefinition MinHeight="300" Height="*" />
                     <RowDefinition Height="10" />
                     <RowDefinition Height="Auto" />
@@ -278,8 +280,105 @@
                     </Grid>
                 </materialDesign:Card>
 
+                <!--Listen For Topics-->
+                <materialDesign:Card Grid.Row="2" Background="{StaticResource Neutral-800}" UniformCornerRadius="10">
+                    <Grid Margin="10">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="10" />
+                            <RowDefinition MinHeight="50" Height="*" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <StackPanel Grid.Row="0" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
+                            <materialDesign:PackIcon Kind="Search" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
+                            <TextBlock Text="Available Topics" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Heading2}" FontWeight="Bold" VerticalAlignment="Center" Margin="5 0 0 0" />
+                        </StackPanel>
+
+                        <Border Grid.Row="2" Background="{StaticResource Neutral-900}" Padding="5" CornerRadius="5">
+                            <ItemsControl ItemsSource="{Binding AvailableTopics}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="{StaticResource Neutral-50}" FontSize="{StaticResource Body1}" />
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </Border>
+
+                        <StackPanel Grid.Row="4" Orientation="Horizontal" Margin="0 10 0 0">
+                            <!--Scan For Topics Button-->
+                            <Button Command="{Binding ScanForTopicsCommand}" HorizontalAlignment="Left" Margin="0 0 5 0" ToolTip="Scan for available topics." ToolTipService.InitialShowDelay="0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Scan For Topics" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <materialDesign:PackIcon Kind="Radar" Width="20" Height="20" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button.Content>
+
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="False" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+
+                            <!--Stop Scanning For Topics Button-->
+                            <Button Command="{Binding StopScanningCommand}" HorizontalAlignment="Left" ToolTip="Stop scanning for topics." ToolTipService.InitialShowDelay="0">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Stop Scanning" Margin="0 0 5 0" VerticalAlignment="Center" />
+                                        <materialDesign:PackIcon Kind="Prohibited" Width="20" Height="20" VerticalAlignment="Center" />
+                                    </StackPanel>
+                                </Button.Content>
+
+                                <Button.Style>
+                                    <Style TargetType="{x:Type Button}" BasedOn="{StaticResource PrimaryButton}">
+                                        <Setter Property="IsEnabled" Value="False" />
+                                        <Style.Triggers>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="True" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                            <MultiDataTrigger>
+                                                <MultiDataTrigger.Conditions>
+                                                    <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}" />
+                                                    <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="True" />
+                                                </MultiDataTrigger.Conditions>
+                                                <Setter Property="IsEnabled" Value="True" />
+                                            </MultiDataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Button.Style>
+                            </Button>
+                        </StackPanel>
+                    </Grid>
+                </materialDesign:Card>
+
                 <!--Subscribe Topic-->
-                <materialDesign:Card Grid.Row="2" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left" Width="500">
+                <materialDesign:Card Grid.Row="4" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left" Width="500">
                     <StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                             <materialDesign:PackIcon Kind="MessageArrowLeft" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />
@@ -312,6 +411,7 @@
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}" />
                                                     <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="False" />
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter Property="IsEnabled" Value="True" />
                                             </MultiDataTrigger>
@@ -319,6 +419,7 @@
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}" />
                                                     <Condition Binding="{Binding IsSubscribed}" Value="False" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="False" />
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter Property="IsEnabled" Value="True" />
                                             </MultiDataTrigger>
@@ -344,6 +445,7 @@
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Connected}" />
                                                     <Condition Binding="{Binding IsSubscribed}" Value="True" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="False" />
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter Property="IsEnabled" Value="True" />
                                             </MultiDataTrigger>
@@ -351,6 +453,7 @@
                                                 <MultiDataTrigger.Conditions>
                                                     <Condition Binding="{Binding ConnectionState}" Value="{x:Static enums:ConnectionState.Bound}" />
                                                     <Condition Binding="{Binding IsSubscribed}" Value="True" />
+                                                    <Condition Binding="{Binding IsScanning}" Value="False" />
                                                 </MultiDataTrigger.Conditions>
                                                 <Setter Property="IsEnabled" Value="True" />
                                             </MultiDataTrigger>
@@ -363,7 +466,7 @@
                 </materialDesign:Card>
 
                 <!--Received Message-->
-                <materialDesign:Card Grid.Row="4" Background="{StaticResource Neutral-800}" UniformCornerRadius="10">
+                <materialDesign:Card Grid.Row="6" Background="{StaticResource Neutral-800}" UniformCornerRadius="10">
                     <Grid Margin="10">
                         <Grid.RowDefinitions>
                             <RowDefinition Height="Auto" />
@@ -378,7 +481,7 @@
                 </materialDesign:Card>
 
                 <!--Logging-->
-                <materialDesign:Card Grid.Row="6" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left">
+                <materialDesign:Card Grid.Row="8" Background="{StaticResource Neutral-800}" UniformCornerRadius="10" HorizontalAlignment="Left">
                     <StackPanel Margin="10">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Left">
                             <materialDesign:PackIcon Kind="FileDocumentEdit" Foreground="{StaticResource Neutral-50}" Width="20" Height="20" />

@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Serilog;
+using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Text;
@@ -15,7 +16,8 @@ namespace ZeroMQSubscriber.ViewModels
 
         private readonly Subscriber _subscriber;
 
-        private string _folderPath;
+        private readonly string _folderPath;
+
         private string _uriPath;
 
         #endregion Fields
@@ -31,6 +33,9 @@ namespace ZeroMQSubscriber.ViewModels
 
             Ipv4 = string.Empty;
             Port = string.Empty;
+
+            AvailableTopics = [];
+
             Topic = string.Empty;
             ReceivedMessage = string.Empty;
             LogFileName = string.Empty;
@@ -49,6 +54,15 @@ namespace ZeroMQSubscriber.ViewModels
 
         [ObservableProperty]
         private ConnectionState _connectionState;
+
+        [ObservableProperty]
+        private bool _isScanning;
+
+        public ObservableCollection<string> AvailableTopics
+        {
+            get;
+            private set;
+        }
 
         [ObservableProperty]
         private string _topic;
@@ -84,6 +98,25 @@ namespace ZeroMQSubscriber.ViewModels
             {
                 _subscriber.OnMessageReceiveEvent += HandleMessageReceive;
             }
+        }
+
+        [RelayCommand]
+        private void ScanForTopics()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                AvailableTopics.Clear();
+            });
+
+            _subscriber.SubscribeTopic(string.Empty, true);
+            IsScanning = true;
+        }
+
+        [RelayCommand]
+        private void StopScanning()
+        {
+            _subscriber.UnsubscribeTopic(string.Empty);
+            IsScanning = false;
         }
 
         [RelayCommand]
@@ -203,11 +236,26 @@ namespace ZeroMQSubscriber.ViewModels
         /// <param name="message"></param>
         private void HandleMessageReceive(byte[] message)
         {
-            ReceivedMessage = Encoding.Default.GetString(message);
-
-            if (IsLogging)
+            if (IsScanning)
             {
-                Log.Information(ReceivedMessage);
+                string topic = Encoding.Default.GetString(message);
+
+                if (!AvailableTopics.Contains(topic) && topic != string.Empty)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        AvailableTopics.Add(topic);
+                    });
+                }
+            }
+            else
+            {
+                ReceivedMessage = Encoding.Default.GetString(message);
+
+                if (IsLogging)
+                {
+                    Log.Information(ReceivedMessage);
+                }
             }
         }
 
